@@ -1,7 +1,15 @@
-import { Box, Button, Checkbox, FormControlLabel, Paper, Snackbar, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Divider, FormControlLabel, IconButton, Paper, Snackbar, TextField, Tooltip, Typography } from "@mui/material";
 import React, { useState } from "react";
 import MuiAlert from '@mui/material/Alert';
 import { sendTelegram } from "./sendTelegram";
+
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import TikTokIcon from '@mui/icons-material/MusicNote'; // TikTok doesn't have a direct icon, so we'll use MusicNote as an example.
+import ViberIcon from "../icon/ViberIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTelegram, faViber } from "@fortawesome/free-brands-svg-icons";
+
 
 const Alert = React.forwardRef((props, ref) => (
     <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -11,11 +19,7 @@ const Alert = React.forwardRef((props, ref) => (
 const Home = () => {
 
     const [open, setOpen] = useState(false);
-    const [error, setError] = useState({
-        phone_number: false,
-        client_fullname: false,
-        description: false,
-    });
+    const [error, setError] = useState(false);
 
     const [data, setData] = useState({
         phone_number: null,
@@ -34,6 +38,11 @@ const Home = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!data.phone_number) {
+            setError(true);
+            return;
+        }
 
         sendTelegram(data);
         console.log('Submitting data:', data);
@@ -56,11 +65,19 @@ const Home = () => {
 
 
     return (
-        <Box sx={{ width: '30%', margin: '5% auto', padding: 3, borderRadius: 2 }}>
+        <Box
+            sx={{
+                width: { xs: '90%', sm: '70%', md: '50%', lg: '30%' },  // Responsive width based on screen size
+                margin: '5% auto',
+                padding: 1,
+                borderRadius: 2
+            }}
+        >
             <Paper sx={{ textAlign: 'center', padding: 4 }}>
                 <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold' }}>
-                    Залиш номер і отримай безкоштовну консультацію
+                    Отримати консультацію
                 </Typography>
+                <Divider sx={{ mb: 2 }} />
                 <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', alignItems: 'center' }}>
                     <TextField
                         error={error.phone_number}
@@ -98,6 +115,11 @@ const Home = () => {
                         label="Терміново"
                         sx={{ alignSelf: 'flex-start' }}
                     />
+                    {error && (
+                        <Alert severity={'error'} sx={{ width: '95%' }}>
+                            Залиште будь ласка номер телефона
+                        </Alert>
+                    )}
                     <Button
                         type="submit"
                         variant="contained"
@@ -106,6 +128,38 @@ const Home = () => {
                     >
                         Надіслати
                     </Button>
+
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        gap={2} // Gap between icons
+                    >
+                        {/* Instagram */}
+                        <Tooltip title="Телеграм група" placement="top">
+                            <IconButton
+                                href="https://t.me/UAadvokatt"
+                                target="_blank"
+                                aria-label="Telegram"
+                                color="primary"
+                            >
+                                <FontAwesomeIcon icon={faTelegram} size="lg" />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Вайбер чат" placement="top">
+                            <IconButton
+                                href="https://invite.viber.com/?g2=AQAC7N%2FxCyPqnVNZqJo6pP%2FprY%2Byfp4nK9xlLxEZbqstnWG4moT9pdC%2BTzQhvDpW"
+                                target="_blank"
+                                aria-label="Viber"
+                                sx={{
+                                    color: 'purple'
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faViber} size="lg" />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
                 </Box>
             </Paper>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar}>
