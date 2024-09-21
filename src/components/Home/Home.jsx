@@ -67,9 +67,9 @@ const Home = () => {
     return (
         <Box
             sx={{
-                width: { xs: '90%', sm: '70%', md: '50%', lg: '30%' },  // Responsive width based on screen size
-                margin: '5% auto',
-                padding: 1,
+                width: { xs: '100%', sm: '70%', md: '50%', lg: '30%' },  // Responsive width based on screen size
+                margin: { xs: '0і', sm: '5% auto'},
+                // padding: 1,
                 borderRadius: 2
             }}
         >
